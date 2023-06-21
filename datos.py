@@ -2,12 +2,12 @@ from random import randint, uniform
 
 #Conjuntos
 Jeans = range(20)
-Horas = range(1080) #Horas: 0-11 ya que el maximo de horas por maquina es de 12 hrs.
+Horas = range(480) #Horas: 0-11 ya que el maximo de horas por maquina es de 12 hrs.
 Tallas = range(6) #Tallas: XS, S, M, L, XL, XXL
 Metodos = range(8) #Metodos: Seleccion
-Maquinarias = range(33) #Maquinarias: 33 maquinas de produccion actual
-Maquinaria_eficiente = range(33, 47) #Maquinaria eficiente: Eco-Friendly
-Maquinaria_total = range(47)
+Maquinarias = range(15) #Maquinarias: 33 maquinas de produccion actual
+Maquinaria_eficiente = range(15, 24) #Maquinaria eficiente: Eco-Friendly
+Maquinaria_total = range(24)
 
 #Parametros
 demanda_diaria_por_talla = {(j,t): randint(2, 4) for j in Jeans for t in Tallas}
@@ -56,14 +56,14 @@ consumo_agua_jean_maquina_talla = {
 '''
 horas_que_tarda_maquina_procesar_jean_talla_metodo = {(m,j,t,p): randint(30, 90) for m in Maquinaria_total for j in Jeans for t in Tallas for p in Metodos}
 conjunto_maquinas_por_metodo = {
-    (0): (0, 1), #Metodo diseno
-    (1): (2, 4),   #Metodo corte
-    (2): (3, 4, 5, 6, 7, 8, 9), #Metodo costura y ensamblaje
-    (3): (10, 11, 12, 13, 14, 15, 33, 34, 35, 36), #Metodo lavado
-    (4): (16, 17, 18, 19, 20, 21, 22, 37, 38, 39, 40), #Metodo tenido
-    (5): (23, 24, 25, 26, 41, 42, 43, 44), #Metodo enjuagado
-    (6): (27, 28), #Metodo control de calidad
-    (7): (29, 30, 31, 32, 45, 46) #Metodo decolorado
+    (0): (0, 1),   #Metodo diseno
+    (1): (2, 3),   #Metodo corte
+    (2): (4, 5), #Metodo costura y ensamblaje
+    (3): (6, 7, 16, 17), #Metodo lavado
+    (4): (8, 9, 18, 19), #Metodo tenido
+    (5): (10, 11, 20, 21), #Metodo enjuagado
+    (6): (12, 13), #Metodo control de calidad
+    (7): (14, 15, 22, 23) #Metodo decolorado
 }
 cantidad_agua_mantencion_por_maquina = {(m): randint(25, 40) for m in Maquinarias}
 for m in Maquinaria_eficiente:

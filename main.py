@@ -1,7 +1,6 @@
 from gurobipy import Model, GRB, quicksum
 from random import randint
 from datos import *
-import multiprocessing
 
 modelo = Model()
 modelo.setParam("TimeLimit", 1800)
@@ -28,15 +27,13 @@ modelo.setObjective(objetivo, GRB.MINIMIZE)
 modelo.addConstrs(quicksum(y[m,j,h] for j in Jeans) <= 1 for m in Maquinaria_total for h in Horas)
 
 #2 Se debe cumplir con la demanda al final del dia
-for llave_1 in conjunto_metodos_para_cada_jean.keys():
-    conjunto_1 = conjunto_metodos_para_cada_jean[llave_1]
-    for p in conjunto_1:
-        for llave_2 in conjunto_maquinas_por_metodo.keys():
-            conjunto_2 = conjunto_maquinas_por_metodo[llave_2]
-            print(conjunto_1, conjunto_2)
-            for m_1 in conjunto_2:
-                print(p, m_1)
-                modelo.addConstrs((quicksum(x[j,t,m,h] for h in Horas) / horas_que_tarda_maquina_procesar_jean_talla_metodo[m_1,j,t,p]) >= demanda_diaria_por_talla[j,t] for j in Jeans for t in Tallas for m in Maquinaria_total)
+for p in conjunto_metodos_para_cada_jean[0]:
+    for llave_2 in conjunto_maquinas_por_metodo.keys():
+        conjunto_2 = conjunto_maquinas_por_metodo[llave_2]
+        print(conjunto_metodos_para_cada_jean[0], conjunto_2)
+        for m_1 in conjunto_2:
+            print(p, m_1)
+            modelo.addConstrs((quicksum(x[j,t,m,h] for h in Horas) / horas_que_tarda_maquina_procesar_jean_talla_metodo[m_1,j,t,p]) >= demanda_diaria_por_talla[j,t] for j in Jeans for t in Tallas for m in Maquinaria_total)
 
 
 
@@ -56,13 +53,14 @@ for llave_1 in conjunto_maquinas_por_metodo.keys():
 
 
 #5 Las maquinas solo pueden estar funcionando un maximo de 12 horas al dia
-modelo.addConstrs(quicksum(x[j,t,m,h] * horas_que_tarda_maquina_procesar_jean_talla_metodo[m,j,t] for h in Horas) <= 720 for j in Jeans for t in Tallas for m in Maquinaria_total)
+#modelo.addConstrs(quicksum(x[j,t,m,h] * horas_que_tarda_maquina_procesar_jean_talla_metodo[m,j,t,p] for h in Horas) <= 720 for j in Jeans for t in Tallas for m in Maquinaria_total)
 
 #6 Si un metodo dura mas tiempo que el tiempo restante de trabajo, no se realizara
 for llave in conjunto_metodos_para_cada_jean.keys():
     conjunto = conjunto_metodos_para_cada_jean[llave]
     for p in conjunto:
-        modelo.addConstrs(b[p,h] * quicksum(horas_que_tarda_maquina_procesar_jean_talla_metodo[m,j,t]) <= f[h] for h in Horas)
+        print(p)
+        modelo.addConstrs(b[p,h] * quicksum(horas_que_tarda_maquina_procesar_jean_talla_metodo[m,j,t,p]) <= f[h] for h in Horas)
 
 
 #7 Si el gasto por el reemplazo de la maquinaria es menor al presupuesto, entonces se implementar
